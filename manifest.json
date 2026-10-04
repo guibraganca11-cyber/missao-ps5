@@ -1,0 +1,10 @@
+{
+  "name": "Missão PS5",
+  "short_name": "Missão PS5",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#05152f",
+  "theme_color": "#071836",
+  "description": "App lúdico de educação financeira e metas para crianças",
+  "icons": []
+}

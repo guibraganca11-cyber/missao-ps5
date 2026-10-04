@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071836">
+  <title>Missão PS5</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero">
+      <div class="comic-lines"></div>
+      <div class="hero-copy">
+        <div class="title-row">
+          <div class="game-icon">🎮</div>
+          <div>
+            <div class="brand">MISSÃO PS5</div>
+            <div class="level-pill" id="levelPill">Nível 1 — Começando a missão</div>
+          </div>
+        </div>
+        <div class="hero-boy" aria-hidden="true">
+          <div class="head"></div>
+          <div class="hair"></div>
+          <div class="body"></div>
+          <div class="arm"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="goal-card">
+      <div>
+        <div class="big-money" id="mainMoney">R$ 300,00</div>
+        <div class="goal-label">de <span id="goalMoney">R$ 4.000,00</span></div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div id="progressFill"></div></div>
+          <div class="progress-percent" id="progressPct">7,5%</div>
+        </div>
+        <div class="remaining" id="remaining">Faltam R$ 3.700,00</div>
+      </div>
+      <div class="console-art" aria-hidden="true">
+        <div class="console"></div>
+        <div class="controller">🎮</div>
+      </div>
+    </section>
+
+    <section class="pots-grid">
+      <button class="pot-card red" data-pot="ps5">
+        <div class="pot-title">PS5</div>
+        <div class="jar"><div class="coins">● ● ●</div></div>
+        <div class="pot-value" id="potPs5">R$ 300,00</div>
+        <div class="pot-sub" id="potPs5Pct">7,5%</div>
+      </button>
+      <button class="pot-card blue" data-pot="spend">
+        <div class="pot-title">Usar</div>
+        <div class="jar"><div class="coins">● ●</div></div>
+        <div class="pot-value" id="potSpend">R$ 0,00</div>
+        <div class="pot-sub">dinheiro livre</div>
+      </button>
+      <button class="pot-card yellow" data-pot="future">
+        <div class="pot-title">Futuro</div>
+        <div class="jar"><div class="plant">🌱</div></div>
+        <div class="pot-value" id="potFuture">R$ 0,00</div>
+        <div class="pot-sub">guardar sem meta</div>
+      </button>
+    </section>
+
+    <section class="info-grid">
+      <div class="info-card purple">
+        <div class="info-icon">🏆</div>
+        <div>
+          <div class="info-label">Próxima conquista</div>
+          <div class="info-big" id="nextMilestone">R$ 500</div>
+          <div class="info-small" id="nextText">Faltam R$ 200</div>
+        </div>
+      </div>
+      <div class="info-card orange">
+        <div class="info-icon">🔥</div>
+        <div>
+          <div class="info-label">Sequência</div>
+          <div class="info-big"><span id="streak">0</span> semanas</div>
+          <div class="info-small">continue a missão</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="action-grid">
+      <button class="action green" id="openMissions">
+        <div class="action-icon">✓</div>
+        <div><b>Fiz minhas missões</b><span>Concluir a semana</span></div>
+      </button>
+      <button class="action cyan" id="openIncome">
+        <div class="action-icon">💰</div>
+        <div><b>Ganhei dinheiro</b><span>Adicionar ao saldo</span></div>
+      </button>
+      <button class="action red2" id="openBuy">
+        <div class="action-icon">🛒</div>
+        <div><b>Quero comprar</b><span>Ver impacto</span></div>
+      </button>
+    </section>
+
+    <section class="missions-card">
+      <div class="section-head">
+        <div>
+          <div class="mini-eyebrow">MINHAS MISSÕES</div>
+          <h2>Missões da semana</h2>
+        </div>
+        <div class="mission-count" id="missionCount">0 de 3</div>
+      </div>
+      <div id="missionPreview"></div>
+    </section>
+
+    <section class="projection-card">
+      <div class="mini-eyebrow">PREVISÃO</div>
+      <h3>Seu caminho até a meta</h3>
+      <p id="projectionText"></p>
+    </section>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-screen="home"><span>🏠</span><small>Início</small></button>
+      <button class="nav-btn" id="navMissions"><span>🎯</span><small>Missões</small></button>
+      <button class="nav-btn" id="navProgress"><span>📈</span><small>Progresso</small></button>
+      <button class="nav-btn" id="navParent"><span>⚙️</span><small>Pai</small></button>
+    </nav>
+  </main>
+
+  <dialog id="missionsDialog">
+    <form method="dialog" class="modal">
+      <button class="close" value="cancel">×</button>
+      <div class="modal-kicker">SEMANA ATUAL</div>
+      <h2>Complete suas missões</h2>
+      <p class="muted">Quando as três estiverem feitas, você recebe o valor da semana.</p>
+      <div id="missionList"></div>
+      <button type="button" class="cta big" id="claimWeek">Receber R$ 10</button>
+      <div class="feedback" id="missionFeedback"></div>
+    </form>
+  </dialog>
+
+  <dialog id="incomeDialog">
+    <form method="dialog" class="modal">
+      <button class="close" value="cancel">×</button>
+      <div class="modal-kicker">ENTROU DINHEIRO</div>
+      <h2>Como você quer dividir?</h2>
+      <label>Quanto você ganhou?
+        <input id="incomeValue" type="number" min="1" step="1" inputmode="decimal" placeholder="100">
+      </label>
+      <label>De onde veio?
+        <select id="incomeSource">
+          <option>Presente</option>
+          <option>Aniversário</option>
+          <option>Missão extra</option>
+          <option>Outro</option>
+        </select>
+      </label>
+      <div class="split-row">
+        <label>PS5 %<input id="splitPs5" type="number" value="70" min="0" max="100"></label>
+        <label>Usar %<input id="splitSpend" type="number" value="20" min="0" max="100"></label>
+        <label>Futuro %<input id="splitFuture" type="number" value="10" min="0" max="100"></label>
+      </div>
+      <div class="split-preview" id="splitPreview">R$ 70 / R$ 20 / R$ 10</div>
+      <button type="button" class="cta big" id="saveIncome">Guardar dinheiro</button>
+      <div class="feedback" id="incomeFeedback"></div>
+    </form>
+  </dialog>
+
+  <dialog id="buyDialog">
+    <form method="dialog" class="modal">
+      <button class="close" value="cancel">×</button>
+      <div class="modal-kicker">ANTES DE COMPRAR</div>
+      <h2>Vale a pena agora?</h2>
+      <label>O que você quer comprar?
+        <input id="buyName" type="text" placeholder="Ex.: jogo, bola, lanche">
+      </label>
+      <label>Quanto custa?
+        <input id="buyValue" type="number" min="1" step="1" inputmode="decimal" placeholder="80">
+      </label>
+      <button type="button" class="cta big" id="simulateBuy">Ver impacto</button>
+      <div id="buyResult"></div>
+    </form>
+  </dialog>
+
+  <dialog id="progressDialog">
+    <form method="dialog" class="modal">
+      <button class="close" value="cancel">×</button>
+      <div class="modal-kicker">SEU PROGRESSO</div>
+      <h2>Conquistas desbloqueadas</h2>
+      <div id="achievementList"></div>
+    </form>
+  </dialog>
+
+  <dialog id="parentDialog">
+    <form method="dialog" class="modal">
+      <button class="close" value="cancel">×</button>
+      <div class="modal-kicker">ÁREA DO PAI</div>
+      <div id="pinGate">
+        <h2>Digite o PIN</h2>
+        <input id="pinInput" type="password" inputmode="numeric" maxlength="4" placeholder="••••">
+        <button type="button" class="cta big" id="unlockParent">Entrar</button>
+        <div class="feedback" id="pinFeedback"></div>
+      </div>
+      <div id="parentPanel" class="hidden">
+        <h2>Configurações</h2>
+        <label>Meta do PS5
+          <input id="parentGoal" type="number" min="500" step="100">
+        </label>
+        <label>Valor semanal
+          <input id="parentWeekly" type="number" min="1" step="1">
+        </label>
+        <label>Bônus do investidor
+          <input id="parentBonus" type="number" min="1" step="1" placeholder="50">
+        </label>
+        <button type="button" class="cta big" id="addBonus">Adicionar bônus</button>
+        <button type="button" class="secondary big" id="saveParent">Salvar ajustes</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>

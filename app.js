@@ -194,3 +194,108 @@ document.querySelectorAll(".pot-card").forEach(btn=>btn.addEventListener("click"
 const toastEl=document.getElementById("toast");
 if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{});}
 renderAll();
+// V3 enhancements: structured state, safe rendering, history and celebrations
+state.profile=state.profile||{name:"Bentinho",avatar:"aventureiro"};
+state.settings=state.settings||{version:3,reducedEffects:false};
+state.achievements=state.achievements||[];
+const esc=value=>String(value).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
+let lastKnownLevel=currentLevel().level;
+const baseSaveState=saveState;
+saveState=function(){
+  const newLevel=currentLevel();
+  const leveledUp=newLevel.level>lastKnownLevel;
+  baseSaveState();
+  if(leveledUp) showLevelUp(newLevel);
+  lastKnownLevel=newLevel.level;
+};
+
+renderMissionPreview=function(){
+  const done=state.completedTasks.filter(Boolean).length;
+  missionCount.textContent=`${done} de ${state.tasks.length}`;
+  missionPreview.innerHTML=state.tasks.map((t,i)=>`<div class="preview-row"><div class="preview-icon">${["🛏️","🧺","⭐","🎯","⚡"][i]||"🎯"}</div><div class="preview-text"><small>MISSÃO ${i+1}</small>${esc(t)}</div><div class="preview-status" aria-label="${state.completedTasks[i]?"concluída":"pendente"}">${state.completedTasks[i]?"✅":"○"}</div></div>`).join("");
+};
+renderMissionDialog=function(){
+  const claimed=state.claimedWeeks.includes(weekKey());
+  missionList.innerHTML=state.tasks.map((t,i)=>`<label class="mission-item"><input type="checkbox" data-task="${i}" ${state.completedTasks[i]?"checked":""} ${claimed?"disabled":""}><span><small>MISSÃO ${i+1}</small>${esc(t)}</span></label>`).join("");
+  claimWeek.disabled=claimed;
+  claimWeek.textContent=claimed?"Semana já concluída ✅":`Receber ${money(state.weekly)}`;
+  missionFeedback.textContent=claimed?"Recompensa recebida. Volte na próxima semana!":"";
+  missionList.querySelectorAll("input").forEach(cb=>cb.addEventListener("change",()=>{state.completedTasks[Number(cb.dataset.task)]=cb.checked;saveState();renderMissionDialog();}));
+};
+
+function showLevelUp(level){
+  const overlay=document.createElement("div");
+  overlay.className="level-up-overlay";
+  overlay.setAttribute("role","dialog");overlay.setAttribute("aria-modal","true");
+  overlay.innerHTML=`<div class="level-up-card"><b>LEVEL UP!</b><div class="medal">${level.level}</div><h2>Você virou ${esc(level.name)}!</h2><p>Você já guardou ${money(state.pots.ps5)}. Continue avançando!</p><button class="cta">Continuar missão</button></div>`;
+  overlay.querySelector("button").addEventListener("click",()=>overlay.remove());
+  document.body.appendChild(overlay);overlay.querySelector("button").focus();
+}
+
+function historyLabel(item){
+  const map={initial:["🚀","Início da missão"],weekly:["✓","Missões da semana"],income:["＋",item.source||"Dinheiro recebido"],parent_bonus:["★","Bônus do investidor"],purchase:["◈","Escolha de compra"],correction:["↻","Correção"]};
+  return map[item.type]||["•","Movimento da missão"];
+}
+function renderHistory(){
+  let box=document.getElementById("historyListV3"); if(!box)return;
+  const rows=[...(state.history||[])].reverse();
+  box.innerHTML=rows.length?rows.map(item=>{const [icon,label]=historyLabel(item);const d=new Date(item.date);return `<div class="history-item"><span class="history-icon">${icon}</span><span><b>${esc(label)}</b><small>${d.toLocaleDateString("pt-BR",{day:"2-digit",month:"short",year:"numeric"})}</small></span><span class="history-value">${item.type==="purchase"?"−":"+"} ${money(item.value)}</span></div>`}).join(""):"<p>Nenhum registro ainda.</p>";
+}
+function ensureParentTools(){
+  if(document.getElementById("parentToolsV3"))return;
+  const tools=document.createElement("div");tools.id="parentToolsV3";
+  tools.innerHTML=`<div class="parent-tabs"><button type="button" class="active" data-tab="settings">Ajustes</button><button type="button" data-tab="tasks">Missões</button><button type="button" data-tab="history">Histórico</button></div><section data-view="tasks" class="hidden"><h3>Editar missões</h3><div id="taskEditorV3"></div><button type="button" class="secondary big" id="saveTasksV3">Salvar missões</button></section><section data-view="history" class="hidden"><h3>Linha do tempo da missão</h3><div class="history-list" id="historyListV3"></div></section>`;
+  parentPanel.prepend(tools);
+  const settings=[...parentPanel.children].filter(el=>el!==tools);
+  tools.querySelectorAll("[data-tab]").forEach(btn=>btn.addEventListener("click",()=>{
+    tools.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b===btn));
+    settings.forEach(el=>el.classList.toggle("hidden",btn.dataset.tab!=="settings"));
+    tools.querySelectorAll("[data-view]").forEach(v=>v.classList.toggle("hidden",v.dataset.view!==btn.dataset.tab));
+    if(btn.dataset.tab==="tasks") renderTaskEditor(); if(btn.dataset.tab==="history")renderHistory();
+  }));
+  tools.querySelector("#saveTasksV3").addEventListener("click",()=>{
+    const values=[...tools.querySelectorAll("#taskEditorV3 input")].map(i=>i.value.trim()).filter(Boolean);
+    if(values.length<1)return toast("Crie pelo menos uma missão.");
+    state.tasks=values.slice(0,5);state.completedTasks=state.tasks.map((_,i)=>Boolean(state.completedTasks[i]));saveState();renderTaskEditor();toast("Missões atualizadas!");
+  });
+}
+function renderTaskEditor(){
+  const editor=document.getElementById("taskEditorV3");if(!editor)return;
+  editor.innerHTML=state.tasks.map((t,i)=>`<label>Missão ${i+1}<input value="${esc(t)}" maxlength="60"></label>`).join("");
+  if(state.tasks.length<5)editor.insertAdjacentHTML("beforeend",`<label>Nova missão (opcional)<input value="" maxlength="60" placeholder="Ex.: Ajudar a arrumar a mesa"></label>`);
+}
+unlockParent.addEventListener("click",()=>{if(pinInput.value===state.pin){ensureParentTools();renderHistory();}});
+
+// More reflective purchase simulator with two clear paths.
+simulateBuy.addEventListener("click",()=>{
+  const name=(buyName.value||"Essa compra").trim(),v=Number(buyValue.value);if(!v||v<=0)return;
+  const free=state.pots.spend,missing=Math.max(0,v-free),weeks=state.weekly?Math.ceil(missing/state.weekly):0;
+  buyResult.innerHTML=v<=free?`<div class="buy-impact"><strong>${esc(name)} — ${money(v)}</strong><p>Boa notícia: seu Dinheiro Livre paga tudo. A Missão PS5 fica protegida.</p><button type="button" class="secondary big" id="keepSaving">Continuar guardando</button></div>`:`<div class="buy-impact"><strong>${esc(name)} — ${money(v)}</strong><p>Você tem <b>${money(free)}</b> livres e faltam <b>${money(missing)}</b>.</p><div class="impact-weeks">Isso equivale a <b>${weeks} ${weeks===1?"semana":"semanas"} de missões</b>.</div><button type="button" class="cta big" id="keepSaving">Continuar guardando</button><button type="button" class="secondary big" id="useMission">Registrar usando a missão</button><small>É só um registro. O app não faz compras.</small></div>`;
+  document.getElementById("keepSaving")?.addEventListener("click",()=>{buyDialog.close();toast("Boa escolha! Sua missão continua forte.");});
+  document.getElementById("useMission")?.addEventListener("click",()=>{if(missing>state.pots.ps5)return toast("Ainda não há valor suficiente.");state.pots.spend=Math.max(0,free-v);state.pots.ps5-=missing;state.history.push({type:"purchase",source:name,value:v,date:new Date().toISOString()});saveState();buyDialog.close();toast("Escolha registrada. Vamos recuperar esse progresso!");});
+});
+
+// Keyboard and accessibility polish.
+document.querySelectorAll("dialog").forEach(d=>d.addEventListener("close",()=>document.body.classList.remove("modal-open")));
+document.querySelectorAll("button").forEach(b=>{if(!b.getAttribute("type")&&!b.closest("form"))b.type="button";});
+renderAll();
+
+// Final state consistency and accessible progress values.
+const renderAllV3=renderAll;
+renderAll=function(){
+  renderAllV3();
+  const pct=Math.min(100,(state.pots.ps5/state.goal)*100);
+  document.querySelector(".progress-bar")?.setAttribute("role","progressbar");
+  document.querySelector(".progress-bar")?.setAttribute("aria-valuemin","0");
+  document.querySelector(".progress-bar")?.setAttribute("aria-valuemax","100");
+  document.querySelector(".progress-bar")?.setAttribute("aria-valuenow",String(Math.round(pct)));
+  const streakCard=document.querySelector(".info-card.orange .info-small");
+  if(streakCard)streakCard.textContent=state.streak?"Você está criando um super hábito!":"Comece sua sequência!";
+};
+claimWeek.addEventListener("click",()=>{
+  if(state.claimedWeeks.includes(weekKey())&&state.completedTasks.length!==state.tasks.length){
+    state.completedTasks=Array(state.tasks.length).fill(false);
+    localStorage.setItem("missaoPs5V2",JSON.stringify(state));renderAll();
+  }
+});
+renderAll();

@@ -1,30 +1,26 @@
-# Missão PS5 — V2
+# Missão PS5 — V3
 
-Aplicativo/PWA infantil para educação financeira e meta de compra de um PS5.
+PWA infantil de educação financeira transformado em uma jornada de conquista. A criança completa missões, divide recompensas entre três potes e acompanha o caminho até o PS5 com níveis, troféus e sequência semanal.
 
-## O que já está pronto
-- Visual infantil/game com paleta vermelho + azul
-- Saldo inicial de R$ 300
-- Meta padrão de R$ 4.000
-- Missões semanais e recompensa de R$ 10
-- Trava para não receber duas vezes na mesma semana
-- Potes PS5 / Usar / Futuro
-- Entrada de presentes e divisão 70/20/10
-- Simulador de compras
-- Conquistas e níveis
-- Área do Pai com PIN
-- Bônus do investidor
-- Persistência local no aparelho
-- PWA instalável e cache offline básico
+## Experiência
 
-## PIN inicial
-2026
+- Painel gamer responsivo para celular, tablet e desktop
+- Avatar infantil original feito em CSS
+- Saldo inicial de R$ 300 e meta padrão de R$ 4.000
+- Missões semanais com recompensa, combo e bloqueio por semana
+- Potes Missão PS5, Dinheiro Livre e Futuro
+- Divisão 70/20/10 ajustável para novas entradas
+- Simulador de compra com impacto em semanas de missão
+- Oito níveis, galeria de conquistas e animação de level up
+- Sequência semanal e linha do tempo
+- Área do pai com PIN `2026`, bônus, ajustes e edição de missões
+- Persistência local compatível com os dados da V2
+- PWA instalável com ícones próprios 192/512 e cache offline
+
+## Desenvolvimento local
+
+O projeto é estático. Sirva esta pasta com qualquer servidor HTTP e abra `index.html`. Não há dependências de build ou backend.
 
 ## Publicação
-A pasta inteira pode ser publicada em:
-- Netlify Drop
-- GitHub Pages
-- Vercel (site estático)
 
-## Importante
-Nesta V2 os dados ficam no navegador do aparelho. A próxima evolução é sincronizar em nuvem para abrir em mais de um aparelho.
+A branch `main` é publicada via GitHub Pages. Os dados permanecem apenas no navegador do aparelho.

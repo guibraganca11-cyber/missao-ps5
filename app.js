@@ -65,7 +65,7 @@ function renderAll(){
   potPs5Pct.textContent=`${pct.toFixed(1).replace(".",",")}% da meta`;
   levelPill.textContent=`Nível ${level.level} — ${level.name}`;
   streak.textContent=state.streak;
-  nextMilestone.textContent=money(next.v);
+  document.getElementById('nextMilestone').textContent=money(next.v);
   nextText.textContent=p>=state.goal?"Missão concluída!":`Faltam ${money(next.v-p)}`;
   renderMissionPreview();
   renderProjection();

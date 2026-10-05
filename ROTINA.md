@@ -2,6 +2,10 @@
 
 ## Para a criança
 
+A tela inicial destaca uma missão com o botão “Fiz!”, o progresso do dia e um caminho de sete dias. Escolha qualquer desafio tocando no título do card. As etapas permitem marcar e desfazer; completar o dia mostra uma celebração sem gerar dinheiro adicional. Datas futuras continuam bloqueadas. Extras aparecem como desafios especiais e continuam sujeitos à aprovação do pai.
+
+“Minha conquista” reúne saldo, potes, entrada de dinheiro, simulador e troféus. O dinheiro e as regras de aprovação não mudam com a apresentação de jogo.
+
 As missões de hoje aparecem na página inicial. Toque em cada ocorrência (1, 2, 3) para marcar ou desfazer. “Ver dias da semana e extras” permite revisar os dias passados da semana e enviar realizações extras ao pai. Datas futuras e semanas pagas ficam bloqueadas.
 
 ## Para o pai

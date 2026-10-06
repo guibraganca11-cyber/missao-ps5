@@ -1,0 +1,15 @@
+const assert=require('node:assert/strict'),{randomUUID}=require('node:crypto'),R=require('../routine-model.js'),{createDB}=require('./cloud-fixture.cjs');
+(async()=>{const {db,a,b,outsider,rpc}=await createDB();const day=(await db.query("select to_char(now() at time zone 'America/Sao_Paulo','YYYY-MM-DD') as day")).rows[0].day;
+ const state={goal:4000,weekly:10,pots:{ps5:300,spend:0,future:0},streak:0,claimedWeeks:[],history:[]};R.init(state,day);const w=R.week(state,day);await assert.rejects(()=>rpc(outsider,'mission_read'),/FAMILY_ACCESS_DENIED/);
+ assert.equal((await rpc(a,'mission_read')).data,null);assert.equal(await rpc(a,'mission_check_pin',{p_pin:'0000'}),false);
+ const init=await rpc(a,'mission_commit',{p_revision:0,p_data:state,p_operation:randomUUID(),p_pin:'2026'});assert.equal(init.ok,true);assert.equal((await rpc(b,'mission_read')).data.pots.ps5,300);
+ const next=structuredClone(init.data),first=next.routine.weeks[w.start].tasks.find(t=>t.days.includes((R.parse(day).getDay()+6)%7));next.routine.weeks[w.start].marks[R.key(day,first.id,0)]=true;
+ const op=randomUUID(),mark=await rpc(b,'mission_commit',{p_revision:1,p_data:next,p_operation:op});assert.equal(mark.ok,true);const duplicate=await rpc(b,'mission_commit',{p_revision:1,p_data:next,p_operation:op});assert.equal(duplicate.revision,2);
+ const conflict=await rpc(a,'mission_commit',{p_revision:1,p_data:state,p_operation:randomUUID()});assert.equal(conflict.conflict,true);
+ const stolen=structuredClone(mark.data);stolen.pots.ps5=999;assert.equal((await rpc(b,'mission_commit',{p_revision:2,p_data:stolen,p_operation:randomUUID()})).denied,true);
+ const bonus=await rpc(a,'mission_commit',{p_revision:2,p_data:stolen,p_operation:randomUUID(),p_pin:'2026'});assert.equal(bonus.ok,true);
+ const future=structuredClone(bonus.data);future.routine.weeks[w.start].marks[R.key(R.add(day,10),first.id,0)]=true;assert.equal((await rpc(b,'mission_commit',{p_revision:3,p_data:future,p_operation:randomUUID()})).denied,true);
+ await db.exec('set role authenticated');await assert.rejects(()=>db.query('select * from mission_private.families'));await db.exec('reset role');await db.exec('set role anon');await assert.rejects(()=>db.query('select public.mission_read()'));await db.exec('reset role');
+ for(let i=0;i<5;i++)assert.equal(await rpc(b,'mission_check_pin',{p_pin:'wrong'}),false);assert.equal(await rpc(b,'mission_check_pin',{p_pin:'2026'}),false);
+ await db.close();console.log('PASS PostgreSQL RPC: isolation, PIN, marks, future dates, money permissions, CAS conflicts, idempotency, rate limits, no direct table/anonymous access.');
+})().catch(e=>{console.error(e);process.exit(1)});

@@ -1,0 +1,13 @@
+{
+  "name": "missao-ps5",
+  "version": "9.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node tests/routine-model.test.cjs && node tests/money-model.test.cjs && node tests/sync-model.test.cjs && node tests/cloud-db.test.cjs",
+    "test:browser": "node tests/cloud-browser.test.cjs"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
+    "playwright": "^1.63.0"
+  }
+}

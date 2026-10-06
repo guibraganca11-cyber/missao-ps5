@@ -1,3 +1,4 @@
+function safeText(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 const DEFAULT_STATE={
   goal:4000,
   weekly:10,
@@ -76,7 +77,7 @@ function renderMissionPreview(){
   missionPreview.innerHTML=state.tasks.map((t,i)=>`
     <div class="preview-row">
       <div class="preview-icon">${["🛏️","🧺","⭐"][i]||"🎯"}</div>
-      <div class="preview-text">${t}</div>
+      <div class="preview-text">${safeText(t)}</div>
       <div class="preview-status">${state.completedTasks[i]?"✅":"○"}</div>
     </div>`).join("");
 }
@@ -85,7 +86,7 @@ function renderMissionDialog(){
   missionList.innerHTML=state.tasks.map((t,i)=>`
     <label class="mission-item">
       <input type="checkbox" data-task="${i}" ${state.completedTasks[i]?"checked":""} ${claimed?"disabled":""}>
-      <span>${t}</span>
+      <span>${safeText(t)}</span>
     </label>`).join("");
   claimWeek.disabled=claimed;
   claimWeek.textContent=claimed?"Semana já concluída ✅":`Receber ${money(state.weekly)}`;
@@ -148,7 +149,7 @@ simulateBuy.addEventListener("click",()=>{
   const name=(buyName.value||"essa compra").trim(),v=Number(buyValue.value);
   if(!v||v<=0){buyResult.innerHTML=`<div class="buy-impact">Digite um valor válido.</div>`;return;}
   const free=state.pots.spend;
-  let html=`<div class="buy-impact"><strong>${name}: ${money(v)}</strong><br>`;
+  let html=`<div class="buy-impact"><strong>${safeText(name)}: ${money(v)}</strong><br>`;
   if(v<=free){
     html+=`Você consegue pagar usando seu pote <b>Usar</b>. A Missão PS5 continua com ${money(state.pots.ps5)}.</div>`;
   }else{

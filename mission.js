@@ -29,5 +29,3 @@ renderMissionPreview=function(){previewV4();document.querySelectorAll('.preview-
 document.querySelectorAll('.close').forEach(b=>b.setAttribute('aria-label','Fechar'));
 toastEl.setAttribute('role','status');
 renderAll();
-// Network update checks replace the old indefinitely cached shell.
-if('serviceWorker' in navigator){let refreshing=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refreshing)return;refreshing=true;location.reload();});navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{});}

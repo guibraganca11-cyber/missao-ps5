@@ -193,7 +193,19 @@ document.querySelectorAll(".pot-card").forEach(btn=>btn.addEventListener("click"
   toast(`${names[pot]}: ${money(state.pots[pot])}`);
 }));
 const toastEl=document.getElementById("toast");
-if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{});}
+// Keep installed phones on the current interface without clearing family data.
+if("serviceWorker" in navigator){
+  let reloadingForUpdate=false;
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{
+    if(reloadingForUpdate)return;
+    reloadingForUpdate=true;
+    location.reload();
+  });
+  const refreshApp=()=>navigator.serviceWorker.register("sw.js?v=12",{updateViaCache:"none"}).then(reg=>reg.update()).catch(()=>{});
+  addEventListener("load",refreshApp,{once:true});
+  addEventListener("pageshow",refreshApp);
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")refreshApp();});
+}
 renderAll();
 // V3 enhancements: structured state, safe rendering, history and celebrations
 state.profile=state.profile||{name:"Bentinho",avatar:"aventureiro"};

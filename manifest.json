@@ -2,7 +2,7 @@
   "name": "Missão PS5 — A Jornada",
   "short_name": "Missão PS5",
   "id": "./",
-  "start_url": "./",
+  "start_url": "./?app=v12",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",

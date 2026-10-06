@@ -25,7 +25,7 @@ Semana de segunda a domingo, datas locais. Configuração inicial: 66 realizaç�
 
 Cada semana mantém tarefas, frequência, meta e valor em um snapshot. A edição não recalcula semanas passadas. Dados antigos, saldos, PIN, histórico e bloqueios de pagamento são preservados. Na primeira migração é salva uma cópia em `missaoPs5AntesDaAgenda` e as informações anteriores permanecem no estado.
 
-Sem configuração online, os dados ficam locais ao navegador e o PIN é apenas uma barreira de uso familiar. Com o serviço ativado conforme `SETUP-SYNC.md`, contas autorizadas compartilham os dados da família e o PIN é validado no servidor. Confira sempre o indicador “salvo online”; uma alteração pendente ainda não está confirmada para os outros aparelhos.
+Sem configuração online, os dados ficam locais ao navegador e o PIN é apenas uma barreira de uso familiar. Com o Google ativado conforme `google/COMECE-AQUI.md`, os aparelhos com o código familiar compartilham a mesma base e o PIN é validado no servidor. Confira sempre o indicador “salvo online”; uma alteração pendente ainda não está confirmada para os outros aparelhos. As edições continuam no app; a planilha é uma consulta automática, não uma segunda tela de edição.
 
 ## Verificação
 

@@ -1,5 +1,7 @@
 # Ativar a família online — uma única vez
 
+> Este guia é da alternativa Supabase. O caminho escolhido pela família agora é Google Sheets: use `google/COMECE-AQUI.md`. Não é necessário criar um projeto Supabase.
+
 O endereço do aplicativo continua o mesmo. A versão preparada ainda funciona localmente enquanto `cloud-config.js` estiver vazio. Publicar o código sozinho NÃO ativa a sincronização.
 
 ## Configuração do serviço

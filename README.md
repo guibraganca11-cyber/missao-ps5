@@ -23,6 +23,8 @@ O front-end é estático. Sirva esta pasta com qualquer servidor HTTP e abra `in
 
 ## Publicação
 
-A branch `main` é publicada via GitHub Pages. Sem configuração, os dados permanecem apenas no navegador do aparelho. A sincronização opcional usa Supabase Auth e funções PostgreSQL com controle de acesso por família e PIN para alterações do responsável.
+A branch `main` é publicada via GitHub Pages. Sem configuração, os dados permanecem apenas no navegador do aparelho. A sincronização Google Sheets usa um código familiar privado e PIN verificado no servidor para alterações do responsável.
 
-**Sincronização ainda exige ativação do serviço.** Siga [SETUP-SYNC.md](SETUP-SYNC.md). Nunca coloque chaves secretas, senhas ou PIN no código público. O mesmo link será mantido.
+**Caminho escolhido: Google Sheets.** A planilha está criada e a integração foi preparada. Siga [google/COMECE-AQUI.md](google/COMECE-AQUI.md) para autorizar e publicar o único arquivo no Apps Script. Sem essa etapa, o app ainda funciona localmente. O mesmo link é mantido; cada celular recebe uma vez o endereço `/exec` e o código familiar. Nunca coloque códigos familiares, senhas ou PIN no código público.
+
+A integração Supabase anterior permanece disponível como alternativa técnica em [SETUP-SYNC.md](SETUP-SYNC.md), mas não precisa ser configurada para usar Google Sheets.

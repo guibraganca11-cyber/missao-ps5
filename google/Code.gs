@@ -186,7 +186,7 @@ function project_(book,record) {
   writeView_(book,'Rotina',w.tasks.map(t=>[t.name,t.count,t.days.length,t.count*t.days.length,t.days.map(d=>days[d]).join(', ')]),5);
   book.getSheetByName('Rotina').getRange(5,4,w.tasks.length,1).setFormulas(w.tasks.map((_,i)=>['=B'+(i+5)+'*C'+(i+5)]));
   summary.getRange('B12').setFormula('=SUM(Rotina!D5:D'+(4+w.tasks.length)+')');
-  summary.getRange('B13').setFormula('=ROUNDUP(B12*B11,0)');
+  summary.getRange('B13').setFormula('=ROUNDUP(B12*B11;0)');
   const marks=[];
   Object.keys(state.routine.weeks).sort().forEach(start=>{const w=state.routine.weeks[start];Object.keys(w.marks).sort().forEach(k=>{const [day,id,slot]=k.split('|'),t=w.tasks.find(t=>t.id===id);marks.push([start,day,t?t.name:id,Number(slot)+1,w.marks[k]?'Sim':'Não',w.paid?'Sim':'Não']);});});
   writeView_(book,'Marcações',marks,6);

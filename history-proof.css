@@ -1,0 +1,9 @@
+.previous-day-proof{width:100%;display:flex;align-items:center;gap:12px;text-align:left;margin:18px 0 4px;padding:12px 14px;border:1px solid #684258;border-radius:10px;background:#211720;color:#e9cbd9}
+.previous-day-proof>span{display:grid;place-items:center;width:33px;height:33px;border-radius:50%;background:#493043;font-weight:800}
+.previous-day-proof>div{flex:1}
+.previous-day-proof small{display:block;color:#c79caf;font-size:8px;letter-spacing:1px;margin-bottom:3px}
+.previous-day-proof b{font-size:13px}
+.previous-day-proof strong{font-size:15px}
+.previous-day-proof.complete{border-color:#4c8065;background:#183328;color:#d5f5e2}
+.previous-day-proof.complete>span{background:#2c664d}
+@media(max-width:480px){.previous-day-proof{padding:10px 11px}.previous-day-proof b{font-size:12px}.previous-day-proof strong{font-size:13px}}

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test": "node tests/routine-model.test.cjs && node tests/money-model.test.cjs && node tests/sync-model.test.cjs && node tests/cloud-db.test.cjs && node tests/google-backend.test.cjs",
-    "test:browser": "node tests/cloud-browser.test.cjs && node tests/google-browser.test.cjs"
+    "test:browser": "node tests/cloud-browser.test.cjs && node tests/google-browser.test.cjs && node tests/rescue-screen.test.cjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.8",

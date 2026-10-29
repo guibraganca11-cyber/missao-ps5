@@ -201,7 +201,7 @@ if("serviceWorker" in navigator){
     reloadingForUpdate=true;
     location.reload();
   });
-  const refreshApp=()=>navigator.serviceWorker.register("sw.js?v=12",{updateViaCache:"none"}).then(reg=>reg.update()).catch(()=>{});
+  const refreshApp=()=>navigator.serviceWorker.register("sw.js?v=13",{updateViaCache:"none"}).then(reg=>reg.update()).catch(()=>{});
   addEventListener("load",refreshApp,{once:true});
   addEventListener("pageshow",refreshApp);
   document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")refreshApp();});
